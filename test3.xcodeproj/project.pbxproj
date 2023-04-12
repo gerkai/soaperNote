@@ -14,6 +14,9 @@
 		217D3D0829DF517100AAFEEB /* test3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217D3D0729DF517100AAFEEB /* test3Tests.swift */; };
 		217D3D1229DF517100AAFEEB /* test3UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217D3D1129DF517100AAFEEB /* test3UITests.swift */; };
 		217D3D1429DF517100AAFEEB /* test3UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217D3D1329DF517100AAFEEB /* test3UITestsLaunchTests.swift */; };
+		217D3D2229DFBF0400AAFEEB /* AudioKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 217D3D2129DFBF0400AAFEEB /* AudioKitUI */; };
+		217D3DCF29E2763300AAFEEB /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217D3DCE29E2763300AAFEEB /* QRScanner.swift */; };
+		21FD94DB29E65F95009BBEB8 /* audioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FD94DA29E65F95009BBEB8 /* audioRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +48,9 @@
 		217D3D0D29DF517100AAFEEB /* test3UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = test3UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		217D3D1129DF517100AAFEEB /* test3UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test3UITests.swift; sourceTree = "<group>"; };
 		217D3D1329DF517100AAFEEB /* test3UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test3UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		217D3D2329DFF02800AAFEEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		217D3DCE29E2763300AAFEEB /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
+		21FD94DA29E65F95009BBEB8 /* audioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = audioRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				217D3D2229DFBF0400AAFEEB /* AudioKitUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +82,8 @@
 		217D3CE929DF516E00AAFEEB = {
 			isa = PBXGroup;
 			children = (
+				21FD94DA29E65F95009BBEB8 /* audioRecorder.swift */,
+				217D3DCE29E2763300AAFEEB /* QRScanner.swift */,
 				217D3CF429DF516E00AAFEEB /* test3 */,
 				217D3D0629DF517100AAFEEB /* test3Tests */,
 				217D3D1029DF517100AAFEEB /* test3UITests */,
@@ -95,6 +104,7 @@
 		217D3CF429DF516E00AAFEEB /* test3 */ = {
 			isa = PBXGroup;
 			children = (
+				217D3D2329DFF02800AAFEEB /* Info.plist */,
 				217D3CF529DF516E00AAFEEB /* test3App.swift */,
 				217D3CF729DF516E00AAFEEB /* ContentView.swift */,
 				217D3CF929DF517100AAFEEB /* Assets.xcassets */,
@@ -145,6 +155,9 @@
 			dependencies = (
 			);
 			name = test3;
+			packageProductDependencies = (
+				217D3D2129DFBF0400AAFEEB /* AudioKitUI */,
+			);
 			productName = test3;
 			productReference = 217D3CF229DF516E00AAFEEB /* test3.app */;
 			productType = "com.apple.product-type.application";
@@ -194,6 +207,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
+				ORGANIZATIONNAME = "lingzhou125@gmail.com";
 				TargetAttributes = {
 					217D3CF129DF516E00AAFEEB = {
 						CreatedOnToolsVersion = 14.3;
@@ -217,6 +231,9 @@
 				Base,
 			);
 			mainGroup = 217D3CE929DF516E00AAFEEB;
+			packageReferences = (
+				217D3D2029DFBF0400AAFEEB /* XCRemoteSwiftPackageReference "AudioKitUI" */,
+			);
 			productRefGroup = 217D3CF329DF516E00AAFEEB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,7 +276,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				217D3DCF29E2763300AAFEEB /* QRScanner.swift in Sources */,
 				217D3CF829DF516E00AAFEEB /* ContentView.swift in Sources */,
+				21FD94DB29E65F95009BBEB8 /* audioRecorder.swift in Sources */,
 				217D3CF629DF516E00AAFEEB /* test3App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,8 +434,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"test3/Preview Content\"";
+				DEVELOPMENT_TEAM = U4LGNA4T2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = test3/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "For QR code detection";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For transcription";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -427,12 +450,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.test3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soaper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -451,8 +474,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"test3/Preview Content\"";
+				DEVELOPMENT_TEAM = U4LGNA4T2A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = test3/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "For QR code detection";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "For transcription";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -463,12 +490,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.test3;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soaper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -604,6 +631,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		217D3D2029DFBF0400AAFEEB /* XCRemoteSwiftPackageReference "AudioKitUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKitUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		217D3D2129DFBF0400AAFEEB /* AudioKitUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 217D3D2029DFBF0400AAFEEB /* XCRemoteSwiftPackageReference "AudioKitUI" */;
+			productName = AudioKitUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 217D3CEA29DF516E00AAFEEB /* Project object */;
 }
