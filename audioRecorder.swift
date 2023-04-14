@@ -10,7 +10,6 @@ import Foundation
 import AVFoundation
 import SwiftUI
 
-
 class AudioRecorder: NSObject, ObservableObject {
     var audioRecorder: AVAudioRecorder!
     @Published var isRecording = false
@@ -18,11 +17,20 @@ class AudioRecorder: NSObject, ObservableObject {
     @Published var isPlaying = false
 
     private var silenceDetectionTimer: Timer?
-    private let silenceThreshold: Float = -40.0 // Adjust this value to adjust the sensitivity of the silence detection
+    private let silenceThreshold: Float = -45.0 // Adjust this value to adjust the sensitivity of the silence detection
     private let silenceDetectionInterval: TimeInterval = 0.1 // Adjust this value to change the frequency of silence checks
+    
+    // Add properties for dynamic silence detection
+    private let silenceDetectionWindowSize: Int = 30
+    private var powerHistory: [Float] = []
+    private var rollingAverage: Float = 0.0
     
     @Published var transcription = ""
     @Published var normalizedPower: CGFloat = 0.0
+    @Published var currentSegmentIndex: Int = 0
+    @Published var orderedTranscriptions: [Int: String] = [:]
+    
+    
 
     func startRecording() {
         
@@ -40,19 +48,19 @@ class AudioRecorder: NSObject, ObservableObject {
         ]
 
         do {
-                    audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
-                    audioRecorder.delegate = self
-                    audioRecorder.isMeteringEnabled = true // Enable metering to detect silence
-                    audioRecorder.record()
-                    isRecording = true
+            audioRecorder = try AVAudioRecorder(url: audioFilename, settings: settings)
+            audioRecorder.delegate = self
+            audioRecorder.isMeteringEnabled = true // Enable metering to detect silence
+            audioRecorder.record()
+            isRecording = true
 
-                    // Start silence detection timer
-                    silenceDetectionTimer = Timer.scheduledTimer(withTimeInterval: silenceDetectionInterval, repeats: true) { _ in
-                        self.checkForSilence()
-                    }
-                } catch {
-                    print("Could not start recording")
-                }
+            // Start silence detection timer
+            silenceDetectionTimer = Timer.scheduledTimer(withTimeInterval: silenceDetectionInterval, repeats: true) { _ in
+                self.checkForSilence()
+            }
+        } catch {
+            print("Could not start recording")
+        }
     }
 
     func stopRecording(shouldTranscribe: Bool = false) {
@@ -63,26 +71,30 @@ class AudioRecorder: NSObject, ObservableObject {
         silenceDetectionTimer?.invalidate()
         silenceDetectionTimer = nil
         
-    
-
-            // Transcribe the last bit of audio
+        // Transcribe the last bit of audio
         if shouldTranscribe {
             let audioFileURL = audioRecorder.url
             print ("audiorecorder stopped")
-            processAudioFile(audioFileURL, model: "whisper-1")
-            }
-        
+           
+            processAudioFile(audioFileURL, model: "whisper-1", segmentIndex: self.currentSegmentIndex + 1)
+        }
     }
     
     private func checkForSilence() {
-        audioRecorder.updateMeters()
-        let currentPower = audioRecorder.averagePower(forChannel: 0)
+            audioRecorder.updateMeters()
+            let currentPower = audioRecorder.averagePower(forChannel: 0)
 
-        //for live meter
-        let normalizedPower = ((currentPower + 160) / 160)
-        self.normalizedPower = CGFloat(min(max(normalizedPower, 0), 1))
-        
-        if currentPower < silenceThreshold {
+            //for live meter
+            let normalizedPower = ((currentPower + 160) / 160)
+            self.normalizedPower = CGFloat(min(max(normalizedPower, 0), 1))
+
+            // Update the rolling average
+            updateRollingAverage(currentPower)
+
+            // Calculate dynamic threshold based on the rolling average
+            let dynamicThreshold = rollingAverage - 10.0
+
+            if currentPower < dynamicThreshold {
             // Detected silence
             let audioFileURL = audioRecorder.url
             
@@ -94,18 +106,29 @@ class AudioRecorder: NSObject, ObservableObject {
             
 
             // Only send the audio file for transcription if the duration is longer than the threshold
-            let durationThreshold: TimeInterval = 0.5 // Adjust the threshold value as needed
+                let durationThreshold: TimeInterval = 0.8 // Adjust the threshold value as needed
             if duration > durationThreshold {
                 // Send the recorded audio file to the Whisper API and update the transcription
                 // Replace "your-model-name" with the appropriate model name
-                processAudioFile(audioFileURL, model: "whisper-1")
-                
+                self.currentSegmentIndex += 1
+                processAudioFile(audioFileURL, model: "whisper-1", segmentIndex:                 self.currentSegmentIndex)
             }
             startRecording()
         }
     }
 
-    private func processAudioFile(_ fileURL: URL, model: String) {
+    
+    private func updateRollingAverage(_ currentPower: Float) {
+            powerHistory.append(currentPower)
+            if powerHistory.count > silenceDetectionWindowSize {
+                rollingAverage += (currentPower - powerHistory.removeFirst()) / Float(silenceDetectionWindowSize)
+            } else {
+                rollingAverage = (rollingAverage * Float(powerHistory.count - 1) + currentPower) / Float(powerHistory.count)
+            }
+        }
+    
+    private func processAudioFile(_ fileURL: URL, model: String, segmentIndex: Int) {
+
         print("sending for transcription \(fileURL)")
         let apiKey = "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" // Replace this with your OpenAI API key
 
@@ -143,27 +166,20 @@ class AudioRecorder: NSObject, ObservableObject {
                 if response.statusCode == 200 {
                     if let decodedData = try? JSONDecoder().decode(TranscriptionResponse.self, from: data) {
                         DispatchQueue.main.async {
-                            self.transcription += "\n" + decodedData.text // Append the new transcription text
-                            // callOpenAI(prompt: decodedData.text)
-                            print (self.transcription)
+                            self.orderedTranscriptions[segmentIndex] = decodedData.text
+                            self.transcription = self.orderedTranscriptions.sorted(by: { $0.key < $1.key }).map({ $0.value }).joined(separator: "\n\n")
                         }
                     } else {
                         print("Invalid response data")
-                        //self.status = "Sorry, an error occured"
                     }
                 } else {
                     print("Unexpected response status code: \(response.statusCode)")
-                    //self.status = "Sorry, an error occured"
                 }
             } else {
                 print("Unexpected error")
-                //self.status = "Sorry, an error occured"
             }
         }.resume()
     }
-
-        
-
 
     func playRecording() {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -183,19 +199,31 @@ class AudioRecorder: NSObject, ObservableObject {
         audioPlayer?.stop()
         isPlaying = false
     }
+
+    func setupAudioSession() {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playAndRecord, mode: .default, options: [])
+            try session.setActive(true)
+        } catch {
+            print("Failed to set up the audio session: \(error.localizedDescription)")
+        }
+}
 }
 
 extension AudioRecorder: AVAudioRecorderDelegate {
-    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if !flag {
-            print("Recording failed")
-         
-        }
+func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+    if !flag {
+        print("Recording failed")
     }
+}
 }
 
 extension AudioRecorder: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        isPlaying = false
-    }
+func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    isPlaying = false
 }
+}
+
+
+
