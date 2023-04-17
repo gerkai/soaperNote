@@ -6,5 +6,12 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>SplashColor</string>
+		<key>UIImageName</key>
+		<string>logo</string>
+	</dict>
 </dict>
 </plist>

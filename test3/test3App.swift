@@ -12,6 +12,7 @@ struct test3App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .background(Color.black)
         }
     }
 }
